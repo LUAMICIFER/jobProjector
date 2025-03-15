@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.new" parent="Theme.JobScrapper_V3">
+        <item name="android:windowSplashScreenAnimatedIcon">@raw/splash</item>
+    </style>
+
+    <style name="Theme.JobScrapper_V3" parent="android:Theme.Material.Light.NoActionBar" />
+
+</resources>

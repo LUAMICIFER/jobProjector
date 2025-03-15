@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.new" parent="Theme.JobScrapper_V3">
+        <!-- Set the background you desire (use white or your app’s background color) -->
+        <item name="android:windowSplashScreenBackground">@color/splash_background</item>
+        <!-- Use the transparent drawable for the splash icon -->
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/transparent_splash</item>
+        <!-- Optional: set icon background color to transparent -->
+        <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+        <!-- Define the theme to use after the splash screen -->
+        <item name="postSplashScreenTheme">@style/Theme.JobScrapper_V3</item>
+
+    </style>
+    <style name="Theme.JobScrapper_V3" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
