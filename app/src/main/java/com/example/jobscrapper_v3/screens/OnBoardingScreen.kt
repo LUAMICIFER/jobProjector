@@ -5,17 +5,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+
 import androidx.compose.foundation.layout.Column
+
+import androidx.compose.foundation.layout.Row
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetState
 import androidx.compose.material.icons.Icons
@@ -25,6 +32,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,6 +40,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.isPopupLayout
+import androidx.datastore.preferences.core.edit
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.airbnb.lottie.compose.LottieAnimation
@@ -46,8 +56,10 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.example.jobscrapper_v3.OnBoardingKey
 
 import com.example.jobscrapper_v3.R
+import com.example.jobscrapper_v3.dataStore
 
 import com.example.jobscrapper_v3.screens.pages.PagesDataClass
 import kotlinx.coroutines.launch
@@ -127,7 +139,7 @@ fun OnBoardingPager(
                 horizontalAlignment = Alignment.CenterHorizontally
 
             ){
-                Spacer(modifier = Modifier.height(24.dp))
+
                 Box (
                     Modifier.fillMaxSize().weight(7f)
                 ) {
@@ -135,7 +147,7 @@ fun OnBoardingPager(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(if (isSystemInDarkTheme()) Color.Black else Color.White)
+                            .background(if (isSystemInDarkTheme()) Color(0xD8151515) else Color.White)
                     ) {
                         val composition by rememberLottieComposition(
                             LottieCompositionSpec.RawRes(
@@ -175,21 +187,23 @@ fun OnBoardingPager(
                     if (pagerState.currentPage > 0) {
 
 
-                    val coroutineScope = rememberCoroutineScope()
+                        val coroutineScope = rememberCoroutineScope()
 
-                    IconButton(onClick = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                        IconButton(onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                            }
+                        }, modifier = Modifier.padding(10.dp)) {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowLeft,
+                                contentDescription = "Back",
+                                tint = textColorContrary
+                            )
                         }
-                    }, modifier = Modifier.padding(10.dp)) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowLeft,
-                            contentDescription = "Back",
-                            tint = textColorContrary
-                        )
                     }
                 }
-                    }
+                PageIndicator(pagerState= pagerState,modifier = Modifier.weight(1f).background(if (isSystemInDarkTheme()) Color(0xD8151515) else Color.White),pageSize = items.size, selectedPage = pagerState.currentPage)
+
 
 
 
@@ -218,10 +232,21 @@ fun OnBoardingPager(
                                 )
                             }
                             else{
+                                val context = LocalContext.current
+                                val coroutineScope = rememberCoroutineScope()
+
+
                                 Button(
                                     onClick = {
-                                        navController.navigate("HomeScreen") {
-                                            popUpTo("OnBoardingScreen") { inclusive = true }
+                                        coroutineScope.launch {
+                                            // Set onboarding complete flag to true in DataStore
+                                            context.dataStore.edit { preferences ->
+                                                preferences[OnBoardingKey] = true
+                                            }
+                                            // Navigate to HomeScreen and clear the back stack
+                                            navController.navigate("HomeScreen") {
+                                                popUpTo("OnBoardingScreen") { inclusive = true }
+                                            }
                                         }
                                     },
                                     shape = RoundedCornerShape(5.dp),
@@ -242,4 +267,54 @@ fun OnBoardingPager(
             }
         }
     }
+}
+
+
+@Composable
+fun PageIndicator(
+    modifier: Modifier = Modifier, pageSize: Int,
+    selectedPage: Int,
+    selectedColor: Color = Color.Blue,
+    unselectedColor: Color = Color.White,
+    pagerState: PagerState
+
+) {Box {
+
+
+    Row(
+        Modifier
+            .wrapContentHeight()
+            .fillMaxWidth()
+            .align(Alignment.BottomCenter)
+            .padding(bottom = 8.dp)
+            .background(if (isSystemInDarkTheme()) Color(0xD8151515) else Color.White),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        repeat(pagerState.pageCount) { iteration ->
+
+            val pageOffset = ((pagerState.currentPage - iteration) + pagerState.currentPageOffsetFraction)
+            // Use kotlin.math.abs to avoid ambiguity:
+            val absOffset = abs(pageOffset)
+
+            // Compute scale: increase by up to 20% as the offset increases.
+            val scale = 20 + 0.9f * absOffset
+            // Compute alpha: fade out as offset increases.
+            val alpha = 40f + 10f*absOffset
+
+            val color = if (pagerState.currentPage == iteration) Color.Blue else Color.LightGray
+            val size = if (pagerState.currentPage == iteration) 16.dp else 10.dp
+            val width = if (pagerState.currentPage == iteration) alpha.dp else 4.dp
+            val verticalPadding = if (pagerState.currentPage == iteration) 0.dp else 8.dp
+            Box(
+                modifier = Modifier
+                    .height(8.dp)
+                    .padding(vertical = 2.dp, horizontal = 4.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .width(width)
+                    .background(color)
+                    .size(size)
+            )
+        }
+    }
+}
 }
