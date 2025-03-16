@@ -1,3 +1,3 @@
 # jobProjector
 
-##[SplashScreen](SplashScreen.md)
+## [SplashScreen](SplashScreen.md)
