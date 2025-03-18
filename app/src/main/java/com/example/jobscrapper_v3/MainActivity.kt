@@ -26,9 +26,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.jobscrapper_v3.screens.HomeScreen
+import com.example.jobscrapper_v3.screens.JobPage
 import com.example.jobscrapper_v3.screens.OnBoardingPager
 import com.example.jobscrapper_v3.screens.OnBoardingScreen
 import com.example.jobscrapper_v3.screens.SplashScreen
+import com.example.jobscrapper_v3.screens.TEMPSideBarItems
 import com.example.jobscrapper_v3.ui.theme.JobScrapper_V3Theme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -67,6 +69,12 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("HomeScreen") {
                         HomeScreen(navController)
+                    }
+                    composable("sidebar") { TEMPSideBarItems(navController) }
+
+                    composable("jobPage/{path}") { backStackEntry ->
+                        val path = backStackEntry.arguments?.getString("path") ?: ""
+                        JobPage(path)
                     }
                 }
 

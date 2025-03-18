@@ -74,7 +74,7 @@ fun HomeScreen(navController: NavController) {
                 Column {
                     Spacer(modifier = Modifier.height(60.dp))
 //                    SideBarItems(modifier = Modifier)
-                    TEMPSideBarItems(modifier = Modifier)
+                    TEMPSideBarItems(navController)
                 }
 
             }

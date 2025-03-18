@@ -15,7 +15,7 @@ interface ApiService{
 object RetrofitInstance {
     val api: ApiService by lazy {
         Retrofit.Builder()
-            .baseUrl("https://my-flask-api-8d18.onrender.com/")
+            .baseUrl("http://3.106.212.53/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)

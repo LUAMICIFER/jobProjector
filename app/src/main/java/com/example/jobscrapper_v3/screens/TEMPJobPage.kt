@@ -1,5 +1,7 @@
 package com.example.jobscrapper_v3.screens
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,35 +37,24 @@ import com.example.jobscrapper_v3.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun JobPage(cateogory:String){
-    val scope = rememberCoroutineScope()
-//    var JobPost by remember { mutableStateOf<List<post>?>(null) }
+fun JobPage(categori:String){
+    val cateogory = Uri.decode(categori.dropLast(1))
+
+    var JobPost by remember { mutableStateOf<List<post>?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
+Text(text = cateogory)
+    LaunchedEffect(Unit) {
 
-//    LaunchedEffect(Unit) {
-//        scope.launch {
-//            try {
+        try {
 //                JobPost = RetrofitInstance.api.getInternshalaData(cateogory)
-//            } catch (e: Exception) {
-//                error = e.message
-//            }
-//        }
-//    }
-// Sample Data
-    var JobPost by remember {
-        mutableStateOf(
-            listOf(
-                post(
-                    companyName = "NextEdge Labs",
-                    imageLink = "https://internshala-uploads.internshala.com/logo%2F60c3763e414b21623422526.png.webp",
-                    link = "https://internshala.com/job/detail/remote-associate-flutter-developer-job-at-nextedge-labs1742271475",
-                    location = "Work from home",
-                    title = "Associate Flutter Developer"
-                )
-            )
-        )
+            val response = RetrofitInstance.api.getInternshalaData(cateogory)
+            Log.d("API_RESPONSE", response.toString()) // Debugging
+            JobPost = response
+        } catch (e: Exception) {
+            Log.e("API_ERROR", e.message ?: "Unknown error") // Log errors
+            error = e.message
+        }
     }
-
     LazyColumn {
         JobPost?.let { list ->
             items(list) { item ->
@@ -90,7 +81,7 @@ fun PostStructure(item: post) {
                     painter = painterResource(id = R.drawable.baseline_location_city_24),
                     contentDescription = "location", modifier = Modifier.size(18.dp), tint = Color.Gray
                 )
-                Text(text = "${item.companyName} ")
+                Text(text = "${item.companyName}")
 
             }
         }
