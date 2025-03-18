@@ -1,4 +1,4 @@
-package com.example.jobscrapper_v3.screens.pages
+package com.example.jobscrapper_v3.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

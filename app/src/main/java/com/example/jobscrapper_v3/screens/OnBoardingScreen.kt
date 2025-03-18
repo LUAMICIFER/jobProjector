@@ -61,7 +61,6 @@ import com.example.jobscrapper_v3.OnBoardingKey
 import com.example.jobscrapper_v3.R
 import com.example.jobscrapper_v3.dataStore
 
-import com.example.jobscrapper_v3.screens.pages.PagesDataClass
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.round
