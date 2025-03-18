@@ -47,7 +47,8 @@ Text(text = cateogory)
 
         try {
 //                JobPost = RetrofitInstance.api.getInternshalaData(cateogory)
-            val response = RetrofitInstance.api.getInternshalaData(cateogory)
+//            val response = RetrofitInstance.api.getInternshalaData(cateogory)
+            val response = RetrofitInstance.api.getAndroidData()
             Log.d("API_RESPONSE", response.toString()) // Debugging
             JobPost = response
         } catch (e: Exception) {
@@ -81,7 +82,7 @@ fun PostStructure(item: post) {
                     painter = painterResource(id = R.drawable.baseline_location_city_24),
                     contentDescription = "location", modifier = Modifier.size(18.dp), tint = Color.Gray
                 )
-                Text(text = "${item.companyName}")
+                Text(text = item.companyName)
 
             }
         }
