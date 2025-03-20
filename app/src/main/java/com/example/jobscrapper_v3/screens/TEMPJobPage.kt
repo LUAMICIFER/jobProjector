@@ -58,9 +58,17 @@ fun JobPage(categori: String) {
     LaunchedEffect(category) {
         isRefreshing = true
         try {
+<<<<<<< HEAD
             val response = RetrofitInstance.api.getInternshalaData(category)
             Log.d("API_RESPONSE", response.toString())
             jobPost = response
+=======
+//                JobPost = RetrofitInstance.api.getInternshalaData(cateogory)
+//            val response = RetrofitInstance.api.getInternshalaData(cateogory)
+            val response = RetrofitInstance.api.getAndroidData()
+            Log.d("API_RESPONSE", response.toString()) // Debugging
+            JobPost = response
+>>>>>>> origin/main
         } catch (e: Exception) {
             Log.e("API_ERROR", e.message ?: "Unknown error")
             error = e.message
@@ -126,6 +134,10 @@ fun PostStructure(item: post, context: android.content.Context) {
                     tint = Color.Gray
                 )
                 Text(text = item.companyName)
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
             }
         }
         Image(
