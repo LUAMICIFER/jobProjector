@@ -84,6 +84,9 @@ dependencies {
     //coil
     implementation("io.coil-kt:coil-compose:2.1.0")
 
+    //
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.27.0")
+
 
 
 }
